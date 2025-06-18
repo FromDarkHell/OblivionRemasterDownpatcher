@@ -15,7 +15,7 @@ namespace OblivionRemasterDownpatcher.Util
 
         public string ExecutablePath { get; set; }
 
-        public bool ChangeVersion(string gamePath, string username, string? password, OblivionVersion newVersion)
+        public async Task<bool> ChangeVersion(string gamePath, string username, string? password, OblivionVersion newVersion)
         {
             var currentVersion = OblivionVersionManager.FromInstall(gamePath);
             if (currentVersion == null) return false;
@@ -86,14 +86,14 @@ namespace OblivionRemasterDownpatcher.Util
                         writer.WriteLine(file);
                 }
 
-                RunDepotDownloader(
+                await RunDepotDownloader(
                     gamePath, username, password, 
                     version.Manifests.First(),
                     [$"-filelist \"{cachePath}\""]
                 );
             }
 
-            using (FileStream stream = File.Create(Path.Combine("steam_appid.txt")))
+            using (FileStream stream = File.Create(Path.Combine(gamePath, "steam_appid.txt")))
             using (StreamWriter writer = new StreamWriter(stream))
             {
                 writer.WriteLine(OblivionVersionManager.APP_ID);
@@ -102,7 +102,7 @@ namespace OblivionRemasterDownpatcher.Util
             return true;
         }
         
-        public bool VerifyVersion(string gamePath, string username, string? password)
+        public async Task<bool> VerifyVersion(string gamePath, string username, string? password)
         {
             HashSet<string> filesToDelete = [];
             bool belowCurrent = true;
@@ -142,7 +142,7 @@ namespace OblivionRemasterDownpatcher.Util
 
             foreach (var manifest in manifests)
             {
-                RunDepotDownloader(gamePath, username, password, manifest, ["-validate"]);
+                await RunDepotDownloader(gamePath, username, password, manifest, ["-validate"]);
             }
 
             return true;
@@ -156,37 +156,41 @@ namespace OblivionRemasterDownpatcher.Util
             return versionFile;
         }
 
-        private int RunDepotDownloader(string gamePath, string username, string? password, ulong manifest, string[] args, Action<string>? outputDataReceived = null)
+        private async Task<int> RunDepotDownloader(string gamePath, string username, string? password, ulong manifest, string[] args, Action<string>? outputDataReceived = null)
         {
-            var commandLine = $"-user \"{username}\"";
-
-            if(password != null)
+            return await Task.Run(() =>
             {
-                commandLine += $" -password \"{password}\"";
-            }
+                var commandLine = $"-user \"{username}\"";
 
-            commandLine += $" -remember-password";
-            commandLine += $" -app {OblivionVersionManager.APP_ID} -depot {OblivionVersionManager.DEPOT_ID} -manifest {manifest}";
-            commandLine += $" -dir \"{gamePath}\"";
-
-            foreach (var arg in args)
-            {
-                commandLine += $" {arg}";
-            }
-
-            Process ddProc = Process.Start(
-                new ProcessStartInfo(ExecutablePath!, commandLine) { 
-                    UseShellExecute = false,
+                if (password != null)
+                {
+                    commandLine += $" -password \"{password}\"";
                 }
-            )!;
 
-            void OnExit(object sender, ExitEventArgs args) => ddProc.Kill();
+                commandLine += $" -remember-password";
+                commandLine += $" -app {OblivionVersionManager.APP_ID} -depot {OblivionVersionManager.DEPOT_ID} -manifest {manifest}";
+                commandLine += $" -dir \"{gamePath}\"";
 
-            Application.Current.Exit += OnExit;
-            ddProc.WaitForExit();
-            Application.Current.Exit -= OnExit;
+                foreach (var arg in args)
+                {
+                    commandLine += $" {arg}";
+                }
 
-            return ddProc.ExitCode;
+                Process ddProc = Process.Start(
+                    new ProcessStartInfo(ExecutablePath!, commandLine)
+                    {
+                        UseShellExecute = false,
+                    }
+                )!;
+
+                void OnExit(object sender, ExitEventArgs args) => ddProc.Kill();
+
+                Application.Current.Exit += OnExit;
+                ddProc.WaitForExit();
+                Application.Current.Exit -= OnExit;
+
+                return ddProc.ExitCode;
+            });
         }
     }
 }

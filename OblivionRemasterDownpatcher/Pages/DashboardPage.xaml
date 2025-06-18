@@ -5,6 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:OblivionRemasterDownpatcher.Pages"
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:components="clr-namespace:OblivionRemasterDownpatcher.Components"
       mc:Ignorable="d" 
       d:DesignHeight="450"
       d:DesignWidth="800"
@@ -26,6 +27,8 @@
             <RowDefinition Height="24"/>
             <RowDefinition Height="8"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="32"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
@@ -89,7 +92,11 @@
             <Label Grid.Column="1" d:Content="V1.1.1" Content="{Binding CurrentVersion.Name}" Margin="4,0,0,0"/>
         </Grid>
 
-        <Grid Grid.Row="8">
+        <Grid Grid.Row="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <components:NetworkGraph HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </Grid>
+        
+        <Grid Grid.Row="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
