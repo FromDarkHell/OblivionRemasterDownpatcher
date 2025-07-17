@@ -15,7 +15,7 @@ namespace OblivionRemasterDownpatcher.Util
 
         public string ExecutablePath { get; set; }
 
-        public async Task<bool> ChangeVersion(string gamePath, string username, string? password, OblivionVersion newVersion)
+        public async Task<bool> ChangeVersion(string gamePath, string username, string? password, OblivionVersion newVersion, Action<Process>? onInitialized = null)
         {
             var currentVersion = OblivionVersionManager.FromInstall(gamePath);
             if (currentVersion == null) return false;
@@ -89,7 +89,8 @@ namespace OblivionRemasterDownpatcher.Util
                 await RunDepotDownloader(
                     gamePath, username, password, 
                     version.Manifests.First(),
-                    [$"-filelist \"{cachePath}\""]
+                    [$"-filelist \"{cachePath}\""],
+                    onInitialized
                 );
             }
 
@@ -102,7 +103,7 @@ namespace OblivionRemasterDownpatcher.Util
             return true;
         }
         
-        public async Task<bool> VerifyVersion(string gamePath, string username, string? password)
+        public async Task<bool> VerifyVersion(string gamePath, string username, string? password, Action<Process>? onInitialized = null)
         {
             HashSet<string> filesToDelete = [];
             bool belowCurrent = true;
@@ -142,7 +143,7 @@ namespace OblivionRemasterDownpatcher.Util
 
             foreach (var manifest in manifests)
             {
-                await RunDepotDownloader(gamePath, username, password, manifest, ["-validate"]);
+                await RunDepotDownloader(gamePath, username, password, manifest, ["-validate"], onInitialized);
             }
 
             return true;
@@ -156,7 +157,7 @@ namespace OblivionRemasterDownpatcher.Util
             return versionFile;
         }
 
-        private async Task<int> RunDepotDownloader(string gamePath, string username, string? password, ulong manifest, string[] args, Action<string>? outputDataReceived = null)
+        private async Task<int> RunDepotDownloader(string gamePath, string username, string? password, ulong manifest, string[] args, Action<Process>? onInitialized = null)
         {
             return await Task.Run(() =>
             {
@@ -182,6 +183,8 @@ namespace OblivionRemasterDownpatcher.Util
                         UseShellExecute = false,
                     }
                 )!;
+
+                onInitialized?.Invoke(ddProc);
 
                 void OnExit(object sender, ExitEventArgs args) => ddProc.Kill();
 

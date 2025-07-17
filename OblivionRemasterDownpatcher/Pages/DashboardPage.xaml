@@ -93,7 +93,7 @@
         </Grid>
 
         <Grid Grid.Row="8" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <components:NetworkGraph HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <components:NetworkGraph HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="NetworkMonitor"/>
         </Grid>
         
         <Grid Grid.Row="10">

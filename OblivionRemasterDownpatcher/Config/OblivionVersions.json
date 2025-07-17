@@ -1,6 +1,6 @@
 ﻿[
   {
-    "Name": "V0.411",
+    "Name": "V0.411 (1.0)",
     "ProductVersion": "0.411.140.0",
     "Manifests": [
       8581416069319670994
@@ -10,7 +10,7 @@
     "Replaced": []
   },
   {
-    "Name": "V1.5",
+    "Name": "V1.511 (1.1)",
     "ProductVersion": "1.511.102.0",
     "Manifests": [
       3680196445693511195
@@ -38,6 +38,42 @@
       "OblivionRemastered/Binaries/Win64/tbb.dll",
       "OblivionRemastered/Binaries/Win64/tbb12.dll",
       "OblivionRemastered/Binaries/Win64/tbbmalloc.dll",
+      "OblivionRemastered/Content/Dev/ObvData/Data/AltarESPMain.esp",
+      "OblivionRemastered/Content/Paks/OblivionRemastered-Windows.pak",
+      "OblivionRemastered/Content/Paks/OblivionRemastered-Windows.ucas",
+      "OblivionRemastered/Content/Paks/OblivionRemastered-Windows.utoc",
+      "OblivionRemastered/Content/Paks/global.ucas",
+      "OblivionRemastered/Content/Paks/global.utoc"
+    ]
+  },
+  {
+    "Name": "V1.512 (1.2)",
+    "ProductVersion": "1.512.105.0",
+    "Manifests": [ 7537075278498631900 ],
+    "Added": [],
+    "Deleted": [],
+    "Replaced": [
+      "Engine/Binaries/ThirdParty/CEF3/Win64/Resources/swiftshader/libEGL.dll",
+      "Engine/Binaries/ThirdParty/CEF3/Win64/Resources/swiftshader/libGLESv2.dll",
+      "Engine/Binaries/ThirdParty/CEF3/Win64/chrome_elf.dll",
+      "Engine/Binaries/ThirdParty/CEF3/Win64/libEGL.dll",
+      "Engine/Binaries/ThirdParty/CEF3/Win64/libGLESv2.dll",
+      "Engine/Binaries/ThirdParty/CEF3/Win64/libcef.dll",
+      "Engine/Binaries/ThirdParty/NVIDIA/NVaftermath/Win64/GFSDK_Aftermath_Lib.x64.dll",
+      "Engine/Binaries/ThirdParty/Ogg/Win64/VS2015/libogg_64.dll",
+      "Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbis_64.dll",
+      "Engine/Binaries/ThirdParty/Vorbis/Win64/VS2015/libvorbisfile_64.dll",
+      "Engine/Binaries/Win64/CrashReportClient.exe",
+      "Engine/Binaries/Win64/EpicWebHelper.exe",
+      "Engine/Binaries/Win64/tbb.dll",
+      "Engine/Binaries/Win64/tbbmalloc.dll",
+      "OblivionRemastered.exe",
+      "OblivionRemastered/Binaries/Win64/OblivionRemastered-Win64-Shipping.exe",
+      "OblivionRemastered/Binaries/Win64/OpenImageDenoise.dll",
+      "OblivionRemastered/Binaries/Win64/tbb.dll",
+      "OblivionRemastered/Binaries/Win64/tbb12.dll",
+      "OblivionRemastered/Binaries/Win64/tbbmalloc.dll",
+      "OblivionRemastered/Content/Dev/DebugUI/DebugMenu.txt",
       "OblivionRemastered/Content/Dev/ObvData/Data/AltarESPMain.esp",
       "OblivionRemastered/Content/Paks/OblivionRemastered-Windows.pak",
       "OblivionRemastered/Content/Paks/OblivionRemastered-Windows.ucas",

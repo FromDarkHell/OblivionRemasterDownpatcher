@@ -2,6 +2,7 @@
 using OblivionRemasterDownpatcher.Util;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -35,9 +36,24 @@ namespace OblivionRemasterDownpatcher.Pages
         public List<OblivionVersion> Versions { get; } = OblivionVersionManager.AllVersions();
         public OblivionVersion SelectedVersion { get; set; } = OblivionVersionManager.AllVersions().First();
 
+        private Process? currentDepotDownloader = null;
+        public Action<Process>? downloaderWatcher = null;
+
+        public DiskUsageMonitor? UsageMonitor { get; set; }
+
+
         public DashboardPage()
         {
             InitializeComponent();
+            
+            downloaderWatcher = (proc) =>
+            {
+                currentDepotDownloader = proc;
+                UsageMonitor = new DiskUsageMonitor(currentDepotDownloader);
+                NetworkMonitor.DiskUsageMonitor = UsageMonitor;
+                
+                RefreshDataContext();
+            };
         }
 
         public void RefreshDataContext()
@@ -85,7 +101,7 @@ namespace OblivionRemasterDownpatcher.Pages
             var password = PasswordBox.Password!;
 
             var wrapper = new DepotDownloaderWrapper(DepotDownloaderWrapper.GetDefaultExecutable());
-            wrapper.VerifyVersion(GamePath!, Username!, password);
+            wrapper.VerifyVersion(GamePath!, Username!, password, downloaderWatcher);
         }
 
         private void DownpatchGame_Click(object sender, RoutedEventArgs e)
@@ -96,7 +112,7 @@ namespace OblivionRemasterDownpatcher.Pages
             if (password.Length <= 0) password = null;
 
             var wrapper = new DepotDownloaderWrapper(DepotDownloaderWrapper.GetDefaultExecutable());
-            wrapper.ChangeVersion(GamePath!, Username!, password, SelectedVersion);
+            wrapper.ChangeVersion(GamePath!, Username!, password, SelectedVersion, downloaderWatcher);
         }
 
         private bool CheckRequiredFields()
